@@ -28,7 +28,7 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
-    @PostMapping("/users")
+    @PostMapping("/sign-up")
     public ResponseEntity<User> saveUser(@RequestBody User user) {
         // send 201
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/users").toUriString());

@@ -8,8 +8,10 @@ import {
 } from "@mui/material";
 import React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { verifyLogin } from "./api";
+import { verifyLogin } from "../api/api";
 import { useMutation, useQueryClient } from "react-query";
+import jwt from "jwt-decode";
+import { AuthContext } from "../App";
 
 const Login = () => {
   const [username, setUsername] = React.useState("");
@@ -19,6 +21,8 @@ const Login = () => {
   const queryClient = useQueryClient();
 
   const navigate = useNavigate();
+
+  const { setIsAuth } = React.useContext(AuthContext);
 
   const {
     mutate: login,
@@ -31,13 +35,20 @@ const Login = () => {
       console.log(response.data);
       localStorage.setItem("access_token", response.data.access_token);
       localStorage.setItem("refresh_token", response.data.refresh_token);
+      // set expiration time
+      // localStorage.setItem(
+      //   "decoded_access_token",
+      //   JSON.stringify(jwt(response.data.access_token))
+      // );
+
+      // console.log("decoded token: ", jwt(response.data.access_token));
       // navigate to the welcome page
+      setIsAuth(true);
       navigate("/welcome");
     },
   });
 
   const handleLogin = () => {
-    console.log("user name is", username, "password is", password);
     // send the credentials to the server
     login({ username: username, password: password });
   };
@@ -71,7 +82,7 @@ const Login = () => {
         Hello! Please sign in or sign up to continue.
       </Typography>
       <Typography textAlign="center">
-        Don't have an account? Sign up <Link to="/sign-up">here</Link>.
+        Don't have an account? Sign up <Link to="/sign-up-now">here</Link>.
       </Typography>
 
       {renderLoading()}

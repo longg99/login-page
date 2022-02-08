@@ -32,7 +32,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // pass if it's the login path or the user want to refresh the token
-        if (request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/token/refresh"))
+        if (request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/token/refresh") ||
+                request.getServletPath().equals("/api/sign-up"))
             filterChain.doFilter(request, response);
         else {
             // key for the token

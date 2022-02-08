@@ -6,12 +6,55 @@ import {
   Grid,
   Container,
   Button,
+  Alert,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { signUpUser } from "../api/api";
+import { useMutation } from "react-query";
 
 const SignUp = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [retype, setRetype] = React.useState("");
+  const [firstName, setFirstName] = React.useState("");
+  const [lastName, setLastName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [success, setSuccess] = React.useState(false);
+
+  const navigate = useNavigate();
+  const {
+    mutate: signUp,
+    isLoading,
+    isError,
+  } = useMutation((userInfo) => signUpUser(userInfo), {
+    onSuccess: (response) => {
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        navigate("/");
+      }, 3000);
+    },
+  });
+
+  const handleSignUp = () => {
+    const userInfo = {
+      username: username,
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+    };
+    signUp(userInfo);
+  };
+
+  const renderNotification = () => {
+    if (!success) return null;
+    return (
+      <Alert severity="success">
+        Welcome abroad! You will be redirected to the login screen shortly.
+      </Alert>
+    );
+  };
 
   return (
     <Container
@@ -27,24 +70,82 @@ const SignUp = () => {
         Already have an account? Sign in <Link to="/login">here</Link>.
       </Typography>
 
+      {renderNotification()}
+
       <TextField
-        id="outlined-name"
+        id="username"
         label="Username"
         margin="normal"
         value={username}
-        onChange={() => {}}
+        onChange={(e) => {
+          setUsername(e.target.value);
+        }}
+        autoFocus={true}
+        autoComplete="off"
       />
 
       <TextField
-        id="outlined-name"
+        id="password"
         label="Password"
         margin="normal"
         value={password}
-        onChange={() => {}}
-        style={{ marginBottom: "2vh" }}
+        onChange={(e) => {
+          setPassword(e.target.value);
+        }}
+        type="password"
       />
 
-      <Button variant="contained">Sign Up</Button>
+      <TextField
+        id="password-retype"
+        label="Retype password"
+        margin="normal"
+        value={retype}
+        onChange={(e) => {
+          setRetype(e.target.value);
+        }}
+        type="password"
+      />
+
+      <TextField
+        id="firstName"
+        label="First name"
+        margin="normal"
+        value={firstName}
+        onChange={(e) => {
+          setFirstName(e.target.value);
+        }}
+        autoComplete="nope"
+      />
+
+      <TextField
+        id="lastName"
+        label="Last name"
+        margin="normal"
+        value={lastName}
+        onChange={(e) => {
+          setLastName(e.target.value);
+        }}
+        autoComplete="nope"
+      />
+
+      <TextField
+        id="email"
+        label="Email"
+        margin="normal"
+        value={email}
+        onChange={(e) => {
+          setEmail(e.target.value);
+        }}
+        autoComplete="nope"
+      />
+
+      <Button
+        variant="contained"
+        sx={{ marginTop: "2vh" }}
+        onClick={handleSignUp}
+      >
+        Sign Up
+      </Button>
     </Container>
   );
 };

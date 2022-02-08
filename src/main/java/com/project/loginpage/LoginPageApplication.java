@@ -31,9 +31,12 @@ public class LoginPageApplication {
 			userService.saveRole(new Role(null, "ROLE_USER"));
 			userService.saveRole(new Role(null, "ROLE_ADMIN"));
 
-			userService.saveUser(new User(null, "Duy Nen", "duynen", "1234", new ArrayList<>()));
-			userService.saveUser(new User(null, "Duy HNP", "duyhnp", "1234", new ArrayList<>()));
-			userService.saveUser(new User(null, "John", "johnadmin", "1234", new ArrayList<>()));
+			userService.saveUser(
+					new User(null, "Duy", "Nen", "duynen", "1234", "duynen123@gmail.com", new ArrayList<>()));
+			userService.saveUser(
+					new User(null, "Duy", "HNP", "duyhnp", "1234", "duyhnp123@gmail.com", new ArrayList<>()));
+			userService.saveUser(
+					new User(null, "John", "Dang", "johnadmin", "1234", "john1234@gmail.com", new ArrayList<>()));
 
 			userService.addRoleToUser("duynen", "ROLE_USER");
 			userService.addRoleToUser("duyhnp", "ROLE_USER");

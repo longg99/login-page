@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
                 // permit h2 console
-                .antMatchers("/h2-console/**", "api/login/**", "/api/token/refresh").permitAll();
+                .antMatchers("/h2-console/**", "api/login/**", "/api/token/refresh", "/api/sign-up/**").permitAll();
         // permit the user to view the user list
         http.authorizeRequests().antMatchers(GET, "/api/users/**").hasAnyAuthority("ROLE_USER");
         // permit admin to edit

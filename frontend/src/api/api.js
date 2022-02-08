@@ -15,3 +15,14 @@ export const verifyLogin = async (credentials) => {
     },
   });
 };
+
+// send an user obj to the server
+export const signUpUser = async (user) => {
+  return await axios({
+    method: "post",
+    url: "api/sign-up",
+    data: {
+      ...user,
+    },
+  });
+};
