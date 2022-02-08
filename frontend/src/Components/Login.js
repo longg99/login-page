@@ -10,15 +10,11 @@ import React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { verifyLogin } from "../api/api";
 import { useMutation, useQueryClient } from "react-query";
-import jwt from "jwt-decode";
 import { AuthContext } from "../App";
+import { useForm, Controller } from "react-hook-form";
 
 const Login = () => {
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
-
-  // get the client
-  const queryClient = useQueryClient();
+  const { handleSubmit, control } = useForm();
 
   const navigate = useNavigate();
 
@@ -48,9 +44,9 @@ const Login = () => {
     },
   });
 
-  const handleLogin = () => {
+  const onSubmit = (data) => {
     // send the credentials to the server
-    login({ username: username, password: password });
+    login(data);
   };
 
   // on error from useMutation
@@ -87,34 +83,58 @@ const Login = () => {
 
       {renderLoading()}
       {renderError()}
-
-      <TextField
-        id="username"
-        label="Username"
-        margin="normal"
-        value={username}
-        onChange={(e) => {
-          setUsername(e.target.value);
+      <form
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
         }}
-        autoFocus={true}
-        autoComplete="off"
-      />
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <Controller
+          name="username"
+          control={control}
+          defaultValue=""
+          rules={{ required: "Username is required" }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <TextField
+              id="username"
+              label="Username"
+              margin="normal"
+              value={value}
+              onChange={onChange}
+              autoFocus={true}
+              error={!!error}
+              helperText={error ? error.message : null}
+              autoComplete="off"
+            />
+          )}
+        />
 
-      <TextField
-        id="password"
-        label="Password"
-        margin="normal"
-        value={password}
-        onChange={(e) => {
-          setPassword(e.target.value);
-        }}
-        type="password"
-        style={{ marginBottom: "2vh" }}
-      />
-
-      <Button variant="contained" onClick={handleLogin}>
-        Sign In
-      </Button>
+        <Controller
+          name="password"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <TextField
+              id="password"
+              label="Password"
+              margin="normal"
+              value={value}
+              onChange={onChange}
+              type="password"
+              style={{ marginBottom: "2vh" }}
+              error={!!error}
+              helperText={error ? error.message : null}
+            />
+          )}
+          rules={{ required: "Password is required", minLength: 4 }}
+        />
+        <Button variant="contained" type="submit">
+          Sign In
+        </Button>
+      </form>
     </Container>
   );
 };
