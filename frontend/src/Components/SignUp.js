@@ -16,16 +16,9 @@ import { useForm, Controller } from "react-hook-form";
 const SignUp = () => {
   // for react-hook-form validation
   const { handleSubmit, control, watch } = useForm();
-  const [username, setUsername] = React.useState("");
   const password = useRef({});
   password.current = watch("password", "");
-  const [retype, setRetype] = React.useState("");
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [email, setEmail] = React.useState("");
   const [success, setSuccess] = React.useState(false);
-
-  console.log(password.current);
 
   const navigate = useNavigate();
   const {
@@ -43,8 +36,9 @@ const SignUp = () => {
   });
 
   const onSubmit = (data) => {
-    // signUp(userInfo);
-    console.log(data);
+    // clone the data, without the retype password field
+    const { password_retype, ...userInfo } = data;
+    signUp(userInfo);
   };
 
   const renderNotification = () => {
@@ -65,7 +59,7 @@ const SignUp = () => {
         marginTop: "2vh",
       }}
     >
-      <Typography variant="h4">Sign up form</Typography>
+      <Typography variant="h4">Sign up</Typography>
       <Typography>
         Already have an account? Sign in <Link to="/login">here</Link>.
       </Typography>
@@ -119,51 +113,103 @@ const SignUp = () => {
               ref={password}
             />
           )}
-          rules={{ required: "Password is required", minLength: 4 }}
+          rules={{
+            required: "Password is required",
+            minLength: {
+              value: 4,
+              message: "Password is too short",
+            },
+          }}
         />
 
-        <TextField
-          id="password-retype"
-          label="Retype password"
-          margin="normal"
-          value={retype}
-          onChange={(e) => {
-            setRetype(e.target.value);
+        <Controller
+          name="password_retype"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <TextField
+              id="password_retype"
+              label="Retype password"
+              margin="normal"
+              value={value}
+              onChange={onChange}
+              type="password"
+              error={!!error}
+              helperText={error ? error.message : null}
+            />
+          )}
+          rules={{
+            required: "Please retype your password",
+            minLength: {
+              value: 4,
+              message: "Password is too short",
+            },
+            validate: (value) =>
+              value === password.current || "The passwords do not match",
           }}
-          type="password"
         />
 
-        <TextField
-          id="firstName"
-          label="First name"
-          margin="normal"
-          value={firstName}
-          onChange={(e) => {
-            setFirstName(e.target.value);
+        <Controller
+          name="firstName"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <TextField
+              id="firstName"
+              label="First name"
+              margin="normal"
+              value={value}
+              onChange={onChange}
+              autoComplete="nope"
+              error={!!error}
+              helperText={error ? error.message : null}
+            />
+          )}
+          rules={{
+            required: "First name is required",
           }}
-          autoComplete="nope"
         />
 
-        <TextField
-          id="lastName"
-          label="Last name"
-          margin="normal"
-          value={lastName}
-          onChange={(e) => {
-            setLastName(e.target.value);
+        <Controller
+          name="lastName"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <TextField
+              id="lastName"
+              label="Last name"
+              margin="normal"
+              value={value}
+              onChange={onChange}
+              autoComplete="nope"
+              error={!!error}
+              helperText={error ? error.message : null}
+            />
+          )}
+          rules={{
+            required: "Last name is required",
           }}
-          autoComplete="nope"
         />
 
-        <TextField
-          id="email"
-          label="Email"
-          margin="normal"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
+        <Controller
+          name="email"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <TextField
+              id="email"
+              label="Email"
+              margin="normal"
+              value={value}
+              onChange={onChange}
+              autoComplete="nope"
+              error={!!error}
+              helperText={error ? error.message : null}
+            />
+          )}
+          rules={{
+            required: "Email is required",
           }}
-          autoComplete="nope"
         />
 
         <Button variant="contained" sx={{ marginTop: "2vh" }} type="submit">

@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User getUser(String username) {
+        // get the current user info
         log.info("getting user with the username of {}", username);
         return userRepo.findByUsername(username);
     }

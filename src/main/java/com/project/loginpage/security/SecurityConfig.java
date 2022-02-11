@@ -43,8 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 // permit h2 console
                 .antMatchers("/h2-console/**", "api/login/**", "/api/token/refresh", "/api/sign-up/**").permitAll();
-        // permit the user to view the user list
-        http.authorizeRequests().antMatchers(GET, "/api/users/**").hasAnyAuthority("ROLE_USER");
+        // permit the admin to view the user list
+        http.authorizeRequests().antMatchers(GET, "/api/users/**").hasAnyAuthority("ROLE_ADMIN");
         // permit admin to edit
         http.authorizeRequests().antMatchers(POST, "/api/users/**").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().antMatchers(POST, "/api/roles/**").hasAnyAuthority("ROLE_ADMIN");

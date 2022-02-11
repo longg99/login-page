@@ -80,5 +80,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         }
     }
 
-
+//    private void verifyToken ()
+    // next task, permit the current user to only access their info, not other.
 }
